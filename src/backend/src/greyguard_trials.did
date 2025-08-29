@@ -1,0 +1,67 @@
+type Patient = record {
+  id: text;
+  principal: text;
+  name: text;
+  age: nat32;
+  conditions: vec<text>;
+  location: text;
+  preferences: vec<text>;
+  created_at: int64;
+};
+
+type ClinicalTrial = record {
+  id: text;
+  title: text;
+  description: text;
+  conditions: vec<text>;
+  location: text;
+  requirements: vec<text>;
+  compensation: text;
+  duration: text;
+  status: text;
+  created_at: int64;
+};
+
+type Match = record {
+  id: text;
+  patient_id: text;
+  trial_id: text;
+  match_score: float64;
+  status: text;
+  created_at: int64;
+};
+
+type FetchAgent = record {
+  id: text;
+  name: text;
+  address: text;
+  capabilities: vec<text>;
+  status: text;
+};
+
+service : {
+  // Patient management
+  "register_patient": (Patient) -> (text);
+  "get_patient": (text) -> (opt<Patient>);
+  "update_patient": (text, Patient) -> (bool);
+  
+  // Clinical trial management
+  "create_trial": (ClinicalTrial) -> (text);
+  "get_trial": (text) -> (opt<ClinicalTrial>);
+  "get_all_trials": () -> (vec<ClinicalTrial>);
+  "search_trials": (vec<text>, text) -> (vec<ClinicalTrial>);
+  
+  // Matching system
+  "find_matches": (text) -> (vec<Match>);
+  "create_match": (text, text) -> (text);
+  "update_match_status": (text, text) -> (bool);
+  
+  // Fetch.ai agent integration
+  "register_fetch_agent": (FetchAgent) -> (text);
+  "get_fetch_agents": () -> (vec<FetchAgent>);
+  "trigger_agent_analysis": (text) -> (text);
+  
+  // ICP-specific features
+  "get_canister_info": () -> (text);
+  "get_cycle_balance": () -> (nat64);
+};

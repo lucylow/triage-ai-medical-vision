@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 220 13% 18%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 220 13% 91%;
+    --secondary-foreground: 220 13% 18%;
+
+    --muted: 220 13% 96%;
+    --muted-foreground: 220 13% 46%;
+
+    --accent: 145 63% 42%;
+    --accent-foreground: 0 0% 98%;
+
+    --success: 145 63% 42%;
+    --success-foreground: 0 0% 98%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 222.2 84% 4.9%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 220 13% 18%;
+
+    --medical-primary: 220 13% 18%;
+    --medical-secondary: 145 63% 42%;
+    --medical-accent: 38 92% 50%;
+    --confidence-high: 145 63% 42%;
+    --confidence-medium: 38 92% 50%;
+    --confidence-low: 0 84.2% 60.2%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 220 13% 26%;
+    --sidebar-primary: 220 13% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 220 13% 96%;
+    --sidebar-accent-foreground: 220 13% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 220 13% 60%;
+
+    /* Grey theme specific colors */
+    --grey-50: 220 13% 98%;
+    --grey-100: 220 13% 96%;
+    --grey-200: 220 13% 91%;
+    --grey-300: 220 13% 84%;
+    --grey-400: 220 13% 64%;
+    --grey-500: 220 13% 46%;
+    --grey-600: 220 13% 32%;
+    --grey-700: 220 13% 26%;
+    --grey-800: 220 13% 18%;
+    --grey-900: 220 13% 12%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 220 13% 80%;
+    --primary-foreground: 222.2 84% 4.9%;
+
+    --secondary: 220 13% 17.5%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 220 13% 17.5%;
+    --muted-foreground: 220 13% 65%;
+
+    --accent: 145 63% 50%;
+    --accent-foreground: 222.2 84% 4.9%;
+
+    --success: 145 63% 50%;
+    --success-foreground: 222.2 84% 4.9%;
+
+    --warning: 38 92% 60%;
+    --warning-foreground: 222.2 84% 4.9%;
+
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --medical-primary: 220 13% 80%;
+    --medical-secondary: 145 63% 50%;
+    --medical-accent: 38 92% 60%;
+    --confidence-high: 145 63% 50%;
+    --confidence-medium: 38 92% 60%;
+    --confidence-low: 0 62.8% 50%;
+
+    --border: 220 13% 17.5%;
+    --input: 220 13% 17.5%;
+    --ring: 220 13% 84%;
+    --sidebar-background: 220 13% 10%;
+    --sidebar-foreground: 220 13% 96%;
+    --sidebar-primary: 220 13% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 13% 16%;
+    --sidebar-accent-foreground: 220 13% 96%;
+    --sidebar-border: 220 13% 16%;
+    --sidebar-ring: 220 13% 60%;
+
+    /* Grey theme specific colors for dark mode */
+    --grey-50: 220 13% 12%;
+    --grey-100: 220 13% 16%;
+    --grey-200: 220 13% 26%;
+    --grey-300: 220 13% 32%;
+    --grey-400: 220 13% 46%;
+    --grey-500: 220 13% 64%;
+    --grey-600: 220 13% 80%;
+    --grey-700: 220 13% 84%;
+    --grey-800: 220 13% 91%;
+    --grey-900: 220 13% 96%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

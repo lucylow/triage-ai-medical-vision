@@ -1,0 +1,149 @@
+version: '3.8'
+
+services:
+  # Internet Computer Local Network
+  dfx-local:
+    image: dfinity/dfx:latest
+    container_name: dfx-local
+    ports:
+      - "8000:8000"  # DFX local network
+      - "4943:4943"  # DFX local network
+    volumes:
+      - ./dfx:/root/.config/dfx
+      - ./src/backend:/workspace/src/backend
+    working_dir: /workspace
+    command: >
+      sh -c "
+        dfx start --background --clean &&
+        dfx deploy &&
+        tail -f /dev/null
+      "
+    environment:
+      - DFX_NETWORK=local
+    networks:
+      - clinical-trial-network
+
+  # Frontend Development Server
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: frontend-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./package.json:/app/package.json
+      - ./vite.config.ts:/app/vite.config.ts
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./tailwind.config.ts:/app/tailwind.config.ts
+    environment:
+      - NODE_ENV=development
+      - VITE_DFX_NETWORK=local
+      - VITE_DFX_HOST=127.0.0.1:8000
+      - VITE_OPENAI_API_KEY=${OPENAI_API_KEY}
+      - VITE_ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - VITE_AGENTVERSE_API_KEY=${AGENTVERSE_API_KEY}
+    depends_on:
+      - dfx-local
+    networks:
+      - clinical-trial-network
+
+  # Python uAgents Development Environment
+  uagents-dev:
+    image: python:3.11-slim
+    container_name: uagents-dev
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./agents:/workspace/agents
+      - ./requirements.txt:/workspace/requirements.txt
+    working_dir: /workspace
+    command: >
+      sh -c "
+        pip install -r requirements.txt &&
+        cd agents &&
+        python -m uagents.run patient_agent &
+        python -m uagents.run trial_agent &
+        python -m uagents.run matching_agent &
+        tail -f /dev/null
+      "
+    environment:
+      - PYTHONPATH=/workspace
+      - AGENTVERSE_API_KEY=${AGENTVERSE_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    depends_on:
+      - dfx-local
+    networks:
+      - clinical-trial-network
+
+  # Redis for Agent Communication
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - clinical-trial-network
+
+  # PostgreSQL for Additional Data Storage
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=clinical_trials
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=secure_password_123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - clinical-trial-network
+
+  # Monitoring and Logging
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - clinical-trial-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - clinical-trial-network
+
+volumes:
+  redis_data:
+  postgres_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  clinical-trial-network:
+    driver: bridge

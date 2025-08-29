@@ -1,0 +1,40 @@
+{
+  "canisters": {
+    "greyguard_trials": {
+      "type": "rust",
+      "package": "greyguard_trials",
+      "candid": "src/greyguard_trials.did"
+    },
+    "greyguard_trials_assets": {
+      "type": "assets",
+      "source": ["dist"],
+      "dependencies": ["greyguard_trials"]
+    }
+  },
+  "defaults": {
+    "build": {
+      "packtool": "",
+      "args": ""
+    },
+    "canister_http": {
+      "enabled": false
+    },
+    "proguard": {
+      "enabled": false
+    },
+    "rust": {
+      "args": ""
+    }
+  },
+  "dfx": "0.15.0",
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:8000",
+      "type": "ephemeral"
+    },
+    "ic": {
+      "type": "public"
+    }
+  },
+  "version": 1
+}
